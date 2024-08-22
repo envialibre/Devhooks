@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <custompayment>
+                <active>1</active>
+                <model>Devhooks\CustomPayment\Model\CustomPayment</model>
+                <order_status>pending</order_status>
+                <title>T1 Pagos</title>
+                <allowspecific>0</allowspecific>
+                <group>offline</group>
+                <api_url>https://api.sandbox.claropagos.com/v1/cargo</api_url>
+                <token>YOUR_DEFAULT_TOKEN</token>                
+            </custompayment>
+        </payment>
+    </default>
+</config>
