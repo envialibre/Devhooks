@@ -23,12 +23,14 @@ class ConfigProvider implements ConfigProviderInterface
         $config = [
             'payment' => [
                 'custompayment' => [
-                    'api_token' => $this->scopeConfig->getValue(self::XML_PATH_API_TOKEN, \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                    'api_url' => $this->scopeConfig->getValue(self::XML_PATH_API_URL, \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                    'api_token' => $this->scopeConfig->getValue('payment/custompayment/token', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                    'api_url' => $this->scopeConfig->getValue('payment/custompayment/api_url', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
                 ],
             ],
         ];
-
+    
         return $config;
     }
+    
+
 }

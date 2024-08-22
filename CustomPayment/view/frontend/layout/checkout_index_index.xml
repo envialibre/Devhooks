@@ -22,14 +22,6 @@ xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_config
                                                                     <item name="methods" xsi:type="array">
                                                                         <item name="custompayment" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
-                                                                            <item name="config" xsi:type="array">
-                                                                                <item name="api_base_url" xsi:type="string" translate="true" xsi:translate="true">
-                                                                                    <value><![CDATA[<?php echo $block->getApiUrl(); ?>]]></value>
-                                                                                </item>
-                                                                                <item name="api_token" xsi:type="string" translate="true" xsi:translate="true">
-                                                                                    <value><![CDATA[<?php echo $block->getApiToken(); ?>]]></value>
-                                                                                </item>
-                                                                            </item>
                                                                         </item>
                                                                     </item>
                                                                 </item>

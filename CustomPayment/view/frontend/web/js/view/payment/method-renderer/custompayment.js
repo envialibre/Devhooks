@@ -5,9 +5,7 @@ define([
   "Magento_Checkout/js/model/quote",
   "Magento_Customer/js/model/customer",
   "Magento_Checkout/js/model/payment/additional-validators",
-  "Magento_Checkout/js/model/payment-service",
-  "Magento_Checkout/js/model/payment/method-list"
-], function (Component, ko, $, quote, customer, additionalValidators, paymentService, paymentMethodList) {
+], function (Component, ko, $, quote, customer, additionalValidators) {
   "use strict";
 
   return Component.extend({
@@ -27,12 +25,9 @@ define([
       this.creditCardNumber = ko.observable(this.creditCardNumber);
       this.creditCardExpiry = ko.observable(this.creditCardExpiry);
       this.creditCardCvc = ko.observable(this.creditCardCvc);
-
-      // Fetching the configuration values
-      this.api_base_url = window.checkoutConfig.payment.custompayment.api_url;
-      this.api_token = window.checkoutConfig.payment.custompayment.api_token;
-
       this.uuid = generateUUID();
+      this.api_base_url = "https://api.sandbox.claropagos.com/v1";
+      this.api_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIyIiwianRpIjoiYmIzNTJkNTMxZWIwMTQ1ZjY2MWJiYWQ5ZmQ0NGFkMDc5ZTQ5YTQzZTk3N2I1MWUzMjI3ODg1OGU5YmRhY2YxYzZjYjY0YmJhYWEzZDA4MDQiLCJpYXQiOjE3MjQyNzA1NDguOTY1ODI2LCJuYmYiOjE3MjQyNzA1NDguOTY1ODM0LCJleHAiOjE3ODczNDI1NDguOTUzMDI2LCJzdWIiOiIxMjMiLCJzY29wZXMiOlsiY2xpZW50ZS10YXJqZXRhcyIsImNsaWVudGUtdHJhbnNhY2Npb25lcyIsImNsaWVudGUtY2xpZW50ZXMiLCJjbGllbnRlLXN1c2NyaXBjaW9uZXMiLCJjbGllbnRlLXBsYW5lcyIsImNsaWVudGUtYW50aWZyYXVkZSIsImNsaWVudGUtd2ViaG9va3MiLCJjbGllbnRlLWNvbmNpbGlhY2lvbiIsImNsaWVudGUtdnRleCJdfQ.e6phIsuyAhyte_G3MwpEGQzo8fL0SdDmPyOR_u2YhzrHqdLyiY_SQUixUmlPDqCsGkfbsAOPHAoJs4bX82BoskUDVEk1jFtK4V7peo7MB5DXTYue7V4GdQgOvWo9NVtbhu2RITe5Rm-D0hsR-d70c6CwifQXafcKmjfSkks3ifmC0YaTvWZjzf2-9BQwhJVJY5NZt0JPeE7ab3yNFkJ4MWPGXbDbMWwEsYc56oxHodDC9DY4G2stgnvago0hjlmMKBMUSyOTYkpLo9gKZU4EH_mU1xNTZV_myScqqareH5YwaRMRHWEYccAKvRcLlen2m2VQNc0gGudBbShpFbzskXF9iG2oEBR_mrZfxzNSA6UnkG0_9d8QJD70xVglA3BT3GosQn5BPt5o8acp8bda3QL8apIFmByXF3isGSpT6HzfvvwEZnqFK6lm5w9HU5U-7pQNBR8YnpEqMvYWtjsdBVrcW-gXcRVTXDMgURI0LedNmx1CJ4jg61_ydE38dvD6pRjTcRr75fQLPcbgJzqQMKUeUToQXG2AK1sd4H7JZSKplDfguEZxlQdzJxj-gFLllLd0FLfMdxdDFB0DHqIeR-sqfn80EDIgZowv7aSpdG2FmUebKxSVA_qVU4xuJEiSieYrp4W5zkNjJDrEL4gqHRtREbdhP9c_BQMoGhoJzdI"; // Replace with your actual token
     },
 
     placeOrder: function () {
