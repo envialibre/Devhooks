@@ -6,8 +6,9 @@ define([
   "Magento_Customer/js/model/customer",
   "Magento_Checkout/js/model/payment/additional-validators",
   "Magento_Checkout/js/model/payment-service",
-  "Magento_Checkout/js/model/payment/method-list"
-], function (Component, ko, $, quote, customer, additionalValidators, paymentService, paymentMethodList) {
+  "Magento_Checkout/js/model/payment/method-list",
+  "mage/url"
+], function (Component, ko, $, quote, customer, additionalValidators, paymentService, paymentMethodList, urlBuilder) {
   "use strict";
 
   return Component.extend({
@@ -29,8 +30,8 @@ define([
       this.creditCardCvc = ko.observable(this.creditCardCvc);
 
       // Fetching the configuration values
-      this.api_base_url = window.checkoutConfig.payment.custompayment.api_url;
-      this.api_token = window.checkoutConfig.payment.custompayment.api_token;
+      this.api_base_url = urlBuilder.build('custompayment/payment/cliente'); // Use urlBuilder to generate the base URL
+      this.api_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIyIiwianRpIjoiNGJhZDU1M2JhYmQ5NzYwNDQzZmYzZWVhYTJhZDgwZTNlZjdmNzY1N2Q5NDYyYTI5NmM2YWIwMjA1NTlhZDQ1NTk4MTgxN2IwNTFmYTA5M2IiLCJpYXQiOjE3MjQ0MTg5NTAuMTgyMjA5LCJuYmYiOjE3MjQ0MTg5NTAuMTgyMjE4LCJleHAiOjE3ODc0OTA5NTAuMTczMDk5LCJzdWIiOiIxMjMiLCJzY29wZXMiOlsiY2xpZW50ZS10YXJqZXRhcyIsImNsaWVudGUtdHJhbnNhY2Npb25lcyIsImNsaWVudGUtY2xpZW50ZXMiLCJjbGllbnRlLXN1c2NyaXBjaW9uZXMiLCJjbGllbnRlLXBsYW5lcyIsImNsaWVudGUtYW50aWZyYXVkZSIsImNsaWVudGUtd2ViaG9va3MiLCJjbGllbnRlLWNvbmNpbGlhY2lvbiIsImNsaWVudGUtdnRleCJdfQ.JlpM3jVY9ofjyyiSrLdFymTJXUxgo6_n0v-FulmLrhWQL9F-1M7v1ZT9K0TYvJIrPERAha-QpfwsNOQt49n2ertUYk5qXAw5FJKAKkbmx9pvlhqZEYi6YPVEN91gGpV3S4mXCK4BGaQSgx6aoSc6zVqaEab0fGpFiV65ecn9G8HYWv4Wfnbmk364jF-ZFBD68i4BGd5bICWYFAomXXCjrlW7uTwVq67BnSXjkwOpzTp2uN9GCF59V_SX87lexhCJ-cNnRDOigPnaYZqBNlDLoetxkRnxHMyM4lXAzjnS3Qei0GbCYFE_etTfNzKEO7JoOdieFUOrRfdbSA3J8RcA3A6J7psn75_4UGLW6M91agCnKgmOqymBOn9COR8mi78S9MJZyS_4C6ePPJXTl7scSAZkz1eysXD93Fi9-MBLLbYRpVxEk0lJOgZYJ1TrmoQWLmvYNtKyp8xGRFLOu_7tX4qHDTY_ZXi5Y8CCfNYeb_5a3KbtQxQKI67UaN4L9bu9Bnc_Hdzn4gwlB_zcsVWPFZhwDLww0ckAmV6oXVUS0lrPWeErfaOFay-WQEQyHRLmCn4nwVIqFt6Xuzx9WV3uDZUeZO4OJ85ASiRXOit8bQO81gn2nQRXSOPx_Bf-BWvAQb0dMO3JwuDjRqu-KBMt6L1Wu3qmWZmhht9o7oO5Ql4';
 
       this.uuid = generateUUID();
     },
@@ -114,11 +115,8 @@ define([
       console.log("Sending payment data:", paymentData);
 
       $.ajax({
-        url: this.buildUrl("cargo"),
+        url: urlBuilder.build('custompayment/payment/cargo'), // Use urlBuilder to generate the URL
         type: "POST",
-        headers: {
-          Authorization: "Bearer " + self.api_token,
-        },
         contentType: "application/json",
         data: JSON.stringify(paymentData),
         success: function (response) {
@@ -135,7 +133,7 @@ define([
         },
       });
     },
-    
+
     createOrGetCustomerByEmail: function (callback) {
       var self = this;
       var email =
@@ -149,11 +147,8 @@ define([
 
       // First, attempt to get the customer by email
       $.ajax({
-        url: this.buildUrl(`cliente/email/${email}`),
+        url: this.buildUrl(`email/${email}`), // Use urlBuilder to generate the URL
         type: "GET",
-        headers: {
-          Authorization: "Bearer " + this.api_token,
-        },
         success: function (response) {
           if (response.status === "success" && response.data && response.data.cliente) {
             console.log("Customer found:", response.data.cliente);
@@ -175,7 +170,6 @@ define([
       });
     },
 
-    
     createCustomer: function (email, callback) {
       var customerData = {
         id_externo: this.uuid, // Use the generated UUID
@@ -198,11 +192,8 @@ define([
       console.log("Sending customer data:", customerData);
 
       $.ajax({
-        url: this.buildUrl("cliente"),
+        url: this.buildUrl(""), // Use the base URL for POST request
         type: "POST",
-        headers: {
-          Authorization: "Bearer " + this.api_token,
-        },
         contentType: "application/json",
         data: JSON.stringify(customerData),
         success: function (response) {
@@ -221,13 +212,13 @@ define([
 
     checkIfCardExists: function (callback) {
       var self = this;
-      var url = this.buildUrl(`cliente/${self.cliente_id}/tarjeta`);
+      var url = this.buildUrl(`${self.cliente_id}/tarjeta`);
 
       $.ajax({
         url: url,
         type: "GET",
         headers: {
-          Authorization: "Bearer " + self.api_token,
+          Authorization: "Bearer " + self.api_token, // Keep the Authorization header for tarjeta requests
         },
         success: function (response) {
           console.log("Fetched existing cards:", response);
@@ -268,7 +259,7 @@ define([
         url: url,
         type: "PUT",
         headers: {
-          Authorization: "Bearer " + self.api_token,
+          Authorization: "Bearer " + self.api_token, // Keep the Authorization header for tarjeta requests
         },
         contentType: "application/json",
         data: JSON.stringify(updateData),
@@ -305,7 +296,7 @@ define([
         url: this.buildUrl("tarjeta"),
         type: "POST",
         headers: {
-          Authorization: "Bearer " + self.api_token,
+          Authorization: "Bearer " + self.api_token, // Keep the Authorization header for tarjeta requests
         },
         contentType: "application/json",
         data: JSON.stringify(cardData),
